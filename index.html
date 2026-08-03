@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>@yvngcastle</title>
+
+<link rel="icon" type="image/gif" href="favicon.gif">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+body{
+
+    background:#000;
+
+    color:#fff;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+
+/* BACKGROUND GIF */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-40px;
+
+    background:url("background.gif") center/cover no-repeat;
+
+    filter:blur(20px);
+
+    transform:scale(1.1);
+
+    z-index:-2;
+
+}
+
+
+/* DARK OVERLAY */
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    z-index:-1;
+
+}
+
+
+
+/* CARD */
+
+.card{
+
+    width:320px;
+
+    text-align:center;
+
+
+    padding:35px 25px;
+
+
+    background:rgba(255,255,255,.08);
+
+
+    border:1px solid rgba(255,255,255,.15);
+
+
+    border-radius:22px;
+
+
+    backdrop-filter:blur(25px);
+
+    -webkit-backdrop-filter:blur(25px);
+
+
+    box-shadow:0 10px 50px rgba(0,0,0,.6);
+
+}
+
+
+
+
+/* PROFILE */
+
+.pfp{
+
+    width:110px;
+
+    height:110px;
+
+
+    margin:auto;
+
+    margin-bottom:22px;
+
+
+    border-radius:50%;
+
+
+    overflow:hidden;
+
+
+    border:1px solid rgba(255,255,255,.2);
+
+}
+
+
+
+.pfp img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+
+
+
+h1{
+
+    font-size:26px;
+
+    font-weight:400;
+
+
+    margin-bottom:20px;
+
+
+    letter-spacing:.5px;
+
+}
+
+
+
+
+/* LINKS */
+
+a{
+
+    width:100%;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    padding:12px 0;
+
+
+    color:white;
+
+
+    text-decoration:none;
+
+
+    opacity:.65;
+
+
+    transition:.25s;
+
+
+    font-size:15px;
+
+}
+
+
+
+a:hover{
+
+    opacity:1;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+
+i{
+
+    font-size:20px;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<audio id="song"></audio>
+
+
+
+<div class="card">
+
+
+<div class="pfp">
+
+<img src="pfp.jpg">
+
+</div>
+
+
+
+<h1>@yvngcastle</h1>
+
+
+
+<a href="https://x.com/yvngcastle" target="_blank">
+
+<i class="ph ph-x-logo"></i>
+
+@yvngcastle
+
+</a>
+
+
+
+<a href="https://instagram.com/yvngcastle" target="_blank">
+
+<i class="ph ph-instagram-logo"></i>
+
+@yvngcastle
+
+</a>
+
+
+
+<a href="https://yungcastle.xyz" target="_blank">
+
+<i class="ph ph-globe"></i>
+
+yungcastle.xyz
+
+</a>
+
+
+
+</div>
+
+
+
+<script>
+
+
+const songs = [
+    "song1.mp3",
+    "song2.mp3",
+    "song3.mp3"
+];
+
+const audio = document.getElementById("song");
+
+let current = 0;
+
+
+audio.volume = 0;
+
+
+
+function fadeIn(){
+
+    let volume = 0;
+
+    const fade = setInterval(()=>{
+
+        volume += 0.01;
+
+        if(volume >= 0.12){
+
+            volume = 0.12;
+            clearInterval(fade);
+
+        }
+
+        audio.volume = volume;
+
+    },100);
+
+}
+
+
+
+
+function playRandomPart(){
+
+    audio.src = songs[current];
+
+
+    audio.addEventListener("loadedmetadata", function startRandom(){
+
+        // picks a random point in the song
+        // avoids the first 10 seconds
+        let randomTime = Math.floor(
+            Math.random() * (audio.duration - 20)
+        ) + 10;
+
+
+        audio.currentTime = randomTime;
+
+
+        audio.play();
+
+
+        fadeIn();
+
+
+        audio.removeEventListener(
+            "loadedmetadata",
+            startRandom
+        );
+
+    });
+
+
+}
+
+
+
+
+
+audio.addEventListener("ended",()=>{
+
+
+    current++;
+
+
+    if(current >= songs.length){
+
+        current = 0;
+
+    }
+
+
+    audio.volume = 0;
+
+
+    playRandomPart();
+
+
+});
+
+
+
+
+playRandomPart();
+
+
+
+
+
+function startMusic(){
+
+
+audio.play()
+
+.then(()=>{
+
+fadeIn();
+
+})
+
+
+.catch(()=>{
+
+
+document.addEventListener("click",()=>{
+
+
+audio.play();
+
+fadeIn();
+
+
+},{once:true});
+
+
+});
+
+
+}
+
+
+
+
+
+audio.addEventListener("ended",()=>{
+
+
+current++;
+
+
+if(current >= songs.length){
+
+current = 0;
+
+}
+
+
+audio.src = songs[current];
+
+
+audio.play();
+
+
+fadeIn();
+
+
+});
+
+
+
+startMusic();
+
+
+
+</script>
+
+
+</body>
+</html>
